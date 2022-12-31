@@ -26,20 +26,23 @@ namespace B3
         int pad = 20;
 
         public int radius = 20;
+        public static int minVel = 2;
+        public static int maxVel = 20;
 
         public BallState state;
 
         private double degreeToRad = 0.0174532927777778;
 
-        public Ball(bool RandomRadius = false)
+        public Ball(bool RandomRadius = false, int rad=20)
         {
+            radius = rad;
             state = BallState.New;
 
             Random random = new Random();
             y = random.Next(pad, ScreenHeight - pad);
             x = random.Next(pad, ScreenWidth - pad);
 
-            var vel = random.Next(2, 20);
+            var vel = random.Next(minVel, maxVel);
 
             double angle = random.Next(0, 359) * degreeToRad;
             xv = (int)MathF.Round((float)(vel * Math.Cos(angle)));
@@ -87,7 +90,6 @@ namespace B3
             var brush1 = new HatchBrush(HatchStyle.DiagonalBrick, GetColor(), Color.Black);  //.Shingle
             g.DrawCircle(pen, x, y, radius);
             g.FillCircle(brush1, x, y, radius); // myBrush, centerX, centerY, radius);
-            g.DrawCircle(pen, x, y, radius);
         }
 
         public bool IsTouching(Ball other)

@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
@@ -18,13 +19,9 @@ namespace B3
         [DllImport("user32.dll")]
         static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
 
-
-        int hatchWidht = 20;
-
         List<Ball> BallList = new List<Ball>();
 
-        int x = 200;
-        int y = 200;
+        int numBalls, radius;
 
         private Point mouseLocation;
 
@@ -32,7 +29,7 @@ namespace B3
 
         bool isDrawing = false;
 
-        Ball b;
+        private DateTime startedTime;
 
         public B3Saver()
         {
@@ -67,6 +64,26 @@ namespace B3
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            if (config.AppSettings.Settings["NumBalls"].Value == null || config.AppSettings.Settings["NumBalls"].Value == "")
+                config.AppSettings.Settings["NumBalls"].Value = "20";
+
+            if (config.AppSettings.Settings["Radius"].Value == null || config.AppSettings.Settings["Radius"].Value == "")
+                config.AppSettings.Settings["Radius"].Value = "20";
+
+            if (config.AppSettings.Settings["MinVelocity"].Value == null || config.AppSettings.Settings["MinVelocity"].Value == "")
+                config.AppSettings.Settings["MinVelocity"].Value = "20";
+
+            if (config.AppSettings.Settings["MaxVelocity"].Value == null || config.AppSettings.Settings["MaxVelocity"].Value == "")
+                config.AppSettings.Settings["MaxVelocity"].Value = "20";
+
+
+            numBalls = int.Parse(config.AppSettings.Settings["NumBalls"].Value);
+            radius = int.Parse(config.AppSettings.Settings["Radius"].Value);
+            Ball.minVel = int.Parse(config.AppSettings.Settings["MinVelocity"].Value);
+            Ball.maxVel = int.Parse(config.AppSettings.Settings["MaxVelocity"].Value);
+
             //Temp rem below
             Cursor.Hide(); 
             TopMost = true;
@@ -79,16 +96,25 @@ namespace B3
         {
             BallList = new List<Ball>();
 
-            for (int x = 0; x < 25; x++)
+            for (int x = 0; x < numBalls; x++)
             {
-                BallList.Add(new Ball(false));
+                BallList.Add(new Ball(false, radius));
             }
 
-            timer1.Interval = 10;
+            startedTime = DateTime.Now;
+
+            timer1.Interval = 15;
             timer1.Enabled = true;
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            //MessageBox.Show("Hit");
+            //g = e.Graphics;
+            MoveBalls(e.Graphics);
+        }
+
+        private void MoveBalls(Graphics g)
         {
             var ballsInPlay = BallList.Where(b => b.state != BallState.Dead).ToList();
 
@@ -97,13 +123,15 @@ namespace B3
 
             foreach (var ball in ballsInPlay)
             {
-                ball.Move(e.Graphics);
+                ball.Move(g);
             }
 
-            e.Graphics.Dispose();
+            g.DrawCircle(new Pen(Color.Black), 20, 20, 2);
+
             isDrawing = false;
             return;
         }
+
 
         private void B3Saver_MouseMove(object sender, MouseEventArgs e)
         {
@@ -136,6 +164,9 @@ namespace B3
             if (isDrawing)
                 return;
 
+            if ((DateTime.Now - startedTime).TotalSeconds > 200)
+                MakeBalls();
+
             isDrawing = true;
             var ballsInPlay = BallList.Where(b => b.state != BallState.Dead).ToList();
             foreach (var ball in ballsInPlay)
@@ -151,6 +182,10 @@ namespace B3
         {
             Ball.ScreenHeight = this.Height;
             Ball.ScreenWidth = this.Width;
+        }
+
+        private void B3Saver_Shown(object sender, EventArgs e)
+        {
         }
 
         private void B3Saver_KeyPress(object sender, KeyPressEventArgs e)

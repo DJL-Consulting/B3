@@ -33,7 +33,7 @@ namespace B3
 
                     if (firstArgument == "/c")           // Configuration mode
                     {
-                        // TODO
+                        Application.Run(new B3Config());
                     }
                     else if (firstArgument == "/p")      // Preview mode
                     {

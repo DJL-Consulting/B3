@@ -47,6 +47,7 @@
             this.Text = "B3";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.B3Saver_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.B3Saver_KeyPress);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.B3Saver_MouseClick);

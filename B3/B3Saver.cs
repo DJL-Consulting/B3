@@ -105,6 +105,7 @@ namespace B3
 
             timer1.Interval = 15;
             timer1.Enabled = true;
+            //timer1_Tick(null, null);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -112,6 +113,33 @@ namespace B3
             //MessageBox.Show("Hit");
             //g = e.Graphics;
             MoveBalls(e.Graphics);
+
+            Application.DoEvents();
+            //wait(2);
+            isDrawing = false;
+        }
+
+        public void wait(int milliseconds)
+        {
+            var waitTimer1 = new System.Windows.Forms.Timer();
+            if (milliseconds == 0 || milliseconds < 0) return;
+
+            // Console.WriteLine("start wait timer");
+            waitTimer1.Interval = milliseconds;
+            waitTimer1.Enabled = true;
+            waitTimer1.Start();
+
+            waitTimer1.Tick += (s, e) =>
+            {
+                waitTimer1.Enabled = false;
+                waitTimer1.Stop();
+                // Console.WriteLine("stop wait timer");
+            };
+
+            while (waitTimer1.Enabled)
+            {
+                Application.DoEvents();
+            }
         }
 
         private void MoveBalls(Graphics g)
@@ -128,7 +156,6 @@ namespace B3
 
             g.DrawCircle(new Pen(Color.Black), 20, 20, 2);
 
-            isDrawing = false;
             return;
         }
 
@@ -164,7 +191,7 @@ namespace B3
             if (isDrawing)
                 return;
 
-            if ((DateTime.Now - startedTime).TotalSeconds > 200)
+            if (Math.Abs((DateTime.Now - startedTime).TotalSeconds) > 200)
                 MakeBalls();
 
             isDrawing = true;

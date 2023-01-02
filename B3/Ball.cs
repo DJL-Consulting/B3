@@ -13,6 +13,9 @@ namespace B3
         Hit1,
         Hit2,
         Hit3,
+        Hit4,
+        Hit5,
+        Hit6,
         Dead
     }
 
@@ -65,14 +68,48 @@ namespace B3
                 case BallState.New:
                     return Color.White;
                 case BallState.Hit1:
-                    return Color.Green;
+                    return Color.LightSkyBlue;
                 case BallState.Hit2:
-                    return Color.Yellow;
+                    return Color.Orange;
                 case BallState.Hit3:
+                    return Color.Silver;
+                case BallState.Hit4:
+                    return Color.Green;
+                case BallState.Hit5:
+                    return Color.Yellow;
+                case BallState.Hit6:
                     return Color.Red;
                 default:
                     return Color.Black;
             }
+
+            //switch (this.state)
+            //{
+            //    case BallState.New:
+            //        return Color.White;
+            //    case BallState.Hit1:
+            //        return Color.Gray;
+            //    case BallState.Hit2:
+            //        return Color.LightGreen;
+            //    case BallState.Hit3:
+            //        return Color.Green;
+            //    case BallState.Hit4:
+            //        return Color.DarkGreen;
+            //    case BallState.Hit5:
+            //        return Color.GreenYellow;
+            //    case BallState.Hit6:
+            //        return Color.LightYellow;
+            //    case BallState.Hit7:
+            //        return Color.Yellow;
+            //    case BallState.Hit8:
+            //        return Color.Pink;
+            //    case BallState.Hit9:
+            //        return Color.Red;
+            //    case BallState.Hit10:
+            //        return Color.DarkRed;
+            //    default:
+            //        return Color.Black;
+            //}
         }
 
         public void Move(Graphics g)

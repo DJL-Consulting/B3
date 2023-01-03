@@ -215,6 +215,12 @@ namespace B3
         {
         }
 
+        private void B3Saver_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!previewMode)
+                Application.Exit();
+        }
+
         private void B3Saver_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!previewMode)

@@ -49,6 +49,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.B3Saver_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.B3Saver_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.B3Saver_KeyPress);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.B3Saver_MouseClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.B3Saver_MouseMove);

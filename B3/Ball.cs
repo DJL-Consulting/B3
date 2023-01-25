@@ -187,7 +187,7 @@ namespace B3
 
             // Assign calculated velcocities:
 
-            xv = (int)Math.Round(vParallel * Math.Cos(thetaOpposite) + vThisTangent * Math.Sin(thisThetaV));
+            xv = -(int)Math.Round(vParallel * Math.Cos(thetaOpposite) + vThisTangent * Math.Sin(thisThetaV));
             yv = (int)Math.Round(vParallel * Math.Sin(thetaOpposite) + vThisTangent * Math.Cos(thisThetaV));
 
             state++;

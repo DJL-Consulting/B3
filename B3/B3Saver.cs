@@ -85,7 +85,7 @@ namespace B3
             Ball.maxVel = int.Parse(config.AppSettings.Settings["MaxVelocity"].Value);
 
             //Temp rem below
-            Cursor.Hide(); 
+            Cursor.Hide();
             TopMost = true;
 
             Ball.ScreenHeight = this.Height;
@@ -96,10 +96,18 @@ namespace B3
         {
             BallList = new List<Ball>();
 
-            for (int x = 0; x < numBalls; x++)
-            {
-                BallList.Add(new Ball(false, radius));
-            }
+            //BallList.Add(new Ball { radius = 50, state = BallState.Hit2, x = 200, y = 451, xv = 10, yv = 0 });
+
+            //BallList.Add(new Ball { radius = 50, state = BallState.New, x = 800, y = 549, xv = -10, yv = 0 });
+
+            BallList.Add(new Ball { radius = 50, state = BallState.Hit2, x = 400, y = 200, xv = 0, yv = 20 });
+
+            BallList.Add(new Ball { radius = 50, state = BallState.New, x = 400, y = 800, xv = 0, yv = -5 });
+
+            //for (int x = 0; x < numBalls; x++)
+            //{
+            //    BallList.Add(new Ball(false, radius));
+            //}
 
             startedTime = DateTime.Now;
 
@@ -112,6 +120,7 @@ namespace B3
         {
             //MessageBox.Show("Hit");
             //g = e.Graphics;
+
             MoveBalls(e.Graphics);
 
             Application.DoEvents();
@@ -198,8 +207,9 @@ namespace B3
             var ballsInPlay = BallList.Where(b => b.state != BallState.Dead).ToList();
             foreach (var ball in ballsInPlay)
             {
-                if (ballsInPlay.Any(b => b.IsTouching(ball) && b != ball))
-                    ball.Collide();
+                var hitBall = ballsInPlay.FirstOrDefault(b => b.IsTouching(ball) && b != ball);
+                if (hitBall != null)
+                    ball.Collide(hitBall);
             }
 
             this.Refresh();

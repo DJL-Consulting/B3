@@ -85,8 +85,8 @@ namespace B3
             Ball.maxVel = int.Parse(config.AppSettings.Settings["MaxVelocity"].Value);
 
             //Temp rem below
-            Cursor.Hide();
-            TopMost = true;
+            //Cursor.Hide();
+            //TopMost = true;
 
             Ball.ScreenHeight = this.Height;
             Ball.ScreenWidth = this.Width;
@@ -96,13 +96,13 @@ namespace B3
         {
             BallList = new List<Ball>();
 
-            //BallList.Add(new Ball { radius = 50, state = BallState.Hit2, x = 200, y = 451, xv = 10, yv = 0 });
+            BallList.Add(new Ball { radius = 100, state = BallState.Hit2, x = 200, y = 1001, xv = 20, yv = 0 });
 
-            //BallList.Add(new Ball { radius = 50, state = BallState.New, x = 800, y = 549, xv = -10, yv = 0 });
+            BallList.Add(new Ball { radius = 100, state = BallState.New, x = 1500, y = 1199, xv = -1, yv = 0 });
 
-            BallList.Add(new Ball { radius = 50, state = BallState.Hit2, x = 400, y = 200, xv = 0, yv = 20 });
+            //BallList.Add(new Ball { radius = 100, state = BallState.New, x = 400, y = 1100, xv = 0, yv = 30 });
 
-            BallList.Add(new Ball { radius = 50, state = BallState.New, x = 400, y = 800, xv = 0, yv = -5 });
+            //BallList.Add(new Ball { radius = 100, state = BallState.New, x = 400, y = 1200, xv = 0, yv = -5 });
 
             //for (int x = 0; x < numBalls; x++)
             //{
@@ -204,12 +204,23 @@ namespace B3
                 MakeBalls();
 
             isDrawing = true;
+
+            var hitList = new Dictionary<Ball, Ball>();
+
             var ballsInPlay = BallList.Where(b => b.state != BallState.Dead).ToList();
             foreach (var ball in ballsInPlay)
             {
+                hitList.Add(ball, null);
+            }
+            
+            foreach (var ball in ballsInPlay)
+            {
                 var hitBall = ballsInPlay.FirstOrDefault(b => b.IsTouching(ball) && b != ball);
-                if (hitBall != null)
+                if (hitBall != null && hitList[hitBall] == null)
+                {
                     ball.Collide(hitBall);
+                    hitList[ball] = hitBall;
+                }
             }
 
             this.Refresh();

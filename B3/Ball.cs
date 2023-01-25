@@ -43,7 +43,7 @@ namespace B3
 
         private double degreeToRad = Math.PI / 180; //0.0174532927777778;
 
-        public Ball(bool RandomRadius = false, int rad=20)
+        public Ball(bool RandomRadius = false, int rad = 20)
         {
             radius = rad;
             state = BallState.New;
@@ -124,7 +124,7 @@ namespace B3
             if ((x - radius < pad && xv < 0) || (x + radius > ScreenWidth - pad && xv > 0))
                 xv = -xv;
 
-            if ( (y - radius < pad && yv < 0) || (y + radius > ScreenHeight - pad && yv > 0))
+            if ((y - radius < pad && yv < 0) || (y + radius > ScreenHeight - pad && yv > 0))
                 yv = -yv;
 
             x += xv;
@@ -142,6 +142,65 @@ namespace B3
         }
 
         public void Collide(Ball other)
+        {
+            var add90 = Math.PI / 2;
+            var twoPi = Math.PI * 2.0;
+
+            var thisOldxv = xv;
+            var thisOldyv = yv;
+
+            var thisOldV = V;
+
+            var thisThetaV = add90 - Math.Atan2(yv, xv); //Velocity Direciton
+
+            var xc = -(this.x <= other.x ? this.x - other.x : other.x - this.x);
+            var yc = (this.y <= other.y ? this.y - other.y : other.y - this.y);
+
+            xc = (other.x - this.x);
+            yc = (this.y - other.y);
+
+            var thisThetaA = add90 - Math.Atan2(yc, xc); // Angle of ball intersection
+
+            var thisThetaVI = thisThetaA + thisThetaV;
+
+            var vThisParallel = xv * Math.Sin(thisThetaA) + yv * Math.Cos(thisThetaA); //V * Math.Cos(thisThetaVI);
+            var vThisTangent = xv * Math.Cos(thisThetaA) + yv * Math.Sin(thisThetaA);  //V * Math.Sin(thisThetaVI);
+
+            var thisThetaOpposite = Math.PI - thisThetaA;
+
+            //Other ball
+            var oldxv = other.xv;
+            var oldyv = other.yv;
+
+            var oldV = V;
+
+            var thetaV = add90 - Math.Atan2(other.yv, other.xv); //Velocity Direciton
+
+            var thetaA = Math.PI + thisThetaA;  // Opposite direction 
+
+            var thetaVI = thetaA + thetaV;
+
+            var vParallel = other.xv * Math.Sin(thetaA) + other.yv * Math.Cos(thetaA); //other.V * Math.Cos(thetaVI);
+            var vTangent = other.xv * Math.Cos(thetaA) + other.yv * Math.Sin(thetaA); //other.V * Math.Sin(thetaVI);
+
+            var thetaOpposite = Math.PI - thetaA;
+
+            // Assign calculated velcocities:
+
+            xv = (int)Math.Round(vParallel * Math.Cos(thetaOpposite) + vThisTangent * Math.Sin(thisThetaV));
+            yv = (int)Math.Round(vParallel * Math.Sin(thetaOpposite) + vThisTangent * Math.Cos(thisThetaV));
+
+            state++;
+
+            other.xv = (int)Math.Round(vThisParallel * Math.Cos(thisThetaOpposite) + vTangent * Math.Sin(thetaV));
+            other.yv = (int)Math.Round(vThisParallel * Math.Sin(thisThetaOpposite) + vTangent * Math.Cos(thetaV));
+
+            other.state++;
+
+            return;
+        }
+
+        public void CollideOld(Ball other)
         {
             var add90 = Math.PI / 2;
             var twoPi = Math.PI * 2.0;            
